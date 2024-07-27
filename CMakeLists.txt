@@ -6,18 +6,21 @@ project(Stellar-Salvage
 )
 
 option(BUILD_TESTS "Build all tests" ON)
+# Option for selecting the backend
+option(USE_SDL2 "Use SDL2 as the rendering backend" ON)
+option(USE_SFML "Use SFML as the rendering backend" OFF)
 
 find_package(PkgConfig REQUIRED)
 find_package(SDL2 REQUIRED)
 
-if(UNIX)
+if (UNIX)
     # find_package does not find sdl2 ttf under ubuntu
     PKG_SEARCH_MODULE(SDL2TTF REQUIRED SDL2_ttf>=2.0.0)
     PKG_SEARCH_MODULE(SDL2IMAGE REQUIRED SDL2_image>=2.0.0)
-else()
+else ()
     find_package(SDL2_ttf REQUIRED)
     find_package(SDL2_image REQUIRED)
-endif()
+endif ()
 
 # add dependencies
 include(cmake/CPM.cmake)
@@ -25,11 +28,13 @@ include(cmake/CPM.cmake)
 CPMAddPackage("gh:gabime/spdlog@1.14.1")
 
 
+add_subdirectory(src)
+
 add_executable(${PROJECT_NAME} main.cpp)
-target_link_libraries(${PROJECT_NAME} spdlog::spdlog)
+target_link_libraries(${PROJECT_NAME} spdlog::spdlog sts_engine)
 target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 
-if(${BUILD_TESTS})
+if (BUILD_TESTS)
     message(STATUS "Building tests")
     CPMAddPackage("gh:catchorg/Catch2@3.6.0")
     enable_testing()
