@@ -5,7 +5,7 @@
 #ifndef STELLAR_SALVAGE_SDLRENDERER_HPP
 #define STELLAR_SALVAGE_SDLRENDERER_HPP
 #include "Renderer.hpp"
-#include "SDL2/SDL.h"
+#include "SDL.h"
 #include <memory>
 
 namespace sts {

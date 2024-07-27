@@ -18,5 +18,7 @@ Engine::~Engine() {
 }
 std::shared_ptr<Renderer> Engine::create_renderer(size_t x, size_t y,
                                                   std::string const &title,
-                                                  Engine const &engine) {}
+                                                  Engine const &engine) {
+  return nullptr;
+}
 } // namespace sts

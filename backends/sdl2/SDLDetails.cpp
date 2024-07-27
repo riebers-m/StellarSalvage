@@ -4,7 +4,6 @@
 
 #include "Details.hpp"
 #include "Exception.hpp"
-#include <SDL2/SDL_ttf.h>
 #include <spdlog/spdlog.h>
 
 namespace sts {
@@ -14,11 +13,11 @@ Details::Details() : m_window(nullptr), m_renderer(nullptr) {
                  "SDL could not initialize SDL! SDL_Error: %s", SDL_GetError());
     throw EngineError("SDL could not initialize");
   }
-  if (TTF_Init() < 0) {
-    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
-                 "SDL could not initialize TTF! SDL_Error: %s", TTF_GetError());
-    throw EngineError("SDL could not initialize ttf");
-  }
+  // if (TTF_Init() < 0) {
+  //   SDL_LogError(SDL_LOG_CATEGORY_APPLICATION,
+  //                "SDL could not initialize TTF! SDL_Error: %s", TTF_GetError());
+  //   throw EngineError("SDL could not initialize ttf");
+  // }
 }
 void Details::init_window_and_renderer(size_t width, size_t height,
                                        std::string const &title) {

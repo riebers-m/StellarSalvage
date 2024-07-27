@@ -10,16 +10,17 @@ option(BUILD_TESTS "Build all tests" ON)
 option(USE_SDL2 "Use SDL2 as the rendering backend" ON)
 option(USE_SFML "Use SFML as the rendering backend" OFF)
 
-find_package(PkgConfig REQUIRED)
-find_package(SDL2 REQUIRED)
 
 if (UNIX)
+    find_package(PkgConfig REQUIRED)
+    find_package(SDL2 REQUIRED)
     # find_package does not find sdl2 ttf under ubuntu
     PKG_SEARCH_MODULE(SDL2TTF REQUIRED SDL2_ttf>=2.0.0)
     PKG_SEARCH_MODULE(SDL2IMAGE REQUIRED SDL2_image>=2.0.0)
 else ()
-    find_package(SDL2_ttf REQUIRED)
-    find_package(SDL2_image REQUIRED)
+    find_package(SDL2 REQUIRED)
+    #find_package(SDL2_ttf REQUIRED)
+    #find_package(SDL2_image REQUIRED)
 endif ()
 
 # add dependencies

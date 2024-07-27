@@ -4,7 +4,7 @@
 
 #ifndef STELLAR_SALVAGE_RENDERER_HPP
 #define STELLAR_SALVAGE_RENDERER_HPP
-#include <stdlib.h>
+#include <stdint.h>
 namespace sts {
     enum class Color
     {

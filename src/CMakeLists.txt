@@ -25,7 +25,7 @@ add_library(sts_engine STATIC ${SOURCE_FILES})
 #link necessary libs
 if (USE_SDL2)
     message(STATUS "Linking SDL2 libs")
-    target_link_libraries(sts_engine PRIVATE SDL2 SDL2_image SDL2_ttf spdlog::spdlog)
+    target_link_libraries(sts_engine PRIVATE SDL2::SDL2 spdlog::spdlog)
 elseif (USER_SFML)
     message(STATUS "Linking SFML libs")
 endif ()

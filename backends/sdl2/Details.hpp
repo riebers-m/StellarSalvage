@@ -5,7 +5,8 @@
 #ifndef STELLAR_SALVAGE_DETAILS_HPP
 #define STELLAR_SALVAGE_DETAILS_HPP
 
-#include <SDL2/SDL.h>
+#include <SDL.h>
+#include <string>
 #include <memory>
 
 namespace sts {

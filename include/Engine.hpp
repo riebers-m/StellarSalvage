@@ -7,6 +7,7 @@
 
 #include "Renderer.hpp"
 #include <memory>
+#include <string>
 
 namespace sts {
 class Details;
