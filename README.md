@@ -1,6 +1,6 @@
 # Stellar Salvage
 
-## Build
+## Build with SDL2
 
 ### Windows MSVC
 1. Download the ``SDL2-devel-2.xx-VC.zip`` https://github.com/libsdl-org/SDL/releases
@@ -15,7 +15,15 @@
 3. ``sudo apt install libsdl2-dev libsdl2-2.0-0 -y``
 4. To use c++-20 you have to install ``gcc-13``
 
-#### Install gcc-13
+## Build with SFML
+
+### Windows MSVC
+1. Download SFML source https://www.sfml-dev.org/download.php
+2. Unzip into folder
+3. Add folder path to system ``PATH``
+4. To find ``SFML.dll`` during runtime add SFML lib folder to system ``PATH
+
+### Install gcc-13 ubuntu
 1. Install software-properties-common package: ``sudo apt install software-properties-common``
 2. Add GCC PPA containing all gcc versions: ``sudo add-apt-repository ppa:ubuntu-toolchain-r/test``
 3. ``sudo apt update``
