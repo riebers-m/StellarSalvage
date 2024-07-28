@@ -24,8 +24,8 @@ public:
   void init_window_and_renderer(size_t width, size_t height,
                                 std::string const &title);
 
-  SDL_Window *get_window() const;
-  SDL_Renderer *get_renderer() const;
+  [[nodiscard]] SDL_Window *get_window() const;
+  [[nodiscard]] SDL_Renderer *get_renderer() const;
 
 private:
   struct SDL_Deleter {
