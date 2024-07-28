@@ -5,7 +5,7 @@
 #ifndef STELLAR_SALVAGE_DETAILS_HPP
 #define STELLAR_SALVAGE_DETAILS_HPP
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include <string>
 #include <memory>
 
@@ -14,7 +14,7 @@ namespace sts {
 class Details {
 public:
   Details();
-  ~Details();
+  ~Details() = default;
 
   Details(Details const &) = delete;
   Details &operator=(Details const &) noexcept = delete;

@@ -8,6 +8,7 @@ if (USE_SDL2)
     message(STATUS "Building with SDL2 backend")
     #    add_subdirectory(backends/sdl2)
     list(APPEND SOURCE_FILES
+            ${CMAKE_SOURCE_DIR}/backends/sdl2/Details.hpp
             ${CMAKE_SOURCE_DIR}/backends/sdl2/SDLRenderer.cpp
             ${CMAKE_SOURCE_DIR}/backends/sdl2/SDLRenderer.hpp
             ${CMAKE_SOURCE_DIR}/backends/sdl2/Engine.cpp

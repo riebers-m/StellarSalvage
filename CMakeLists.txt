@@ -5,6 +5,8 @@ project(Stellar-Salvage
         VERSION 0.1.0
 )
 
+set(CMAKE_CXX_STANDARD 20)
+
 option(BUILD_TESTS "Build all tests" ON)
 # Option for selecting the backend
 option(USE_SDL2 "Use SDL2 as the rendering backend" ON)
@@ -33,7 +35,8 @@ add_subdirectory(src)
 
 add_executable(${PROJECT_NAME} main.cpp)
 target_link_libraries(${PROJECT_NAME} spdlog::spdlog sts_engine)
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
+#target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
 
 if (BUILD_TESTS)
     message(STATUS "Building tests")

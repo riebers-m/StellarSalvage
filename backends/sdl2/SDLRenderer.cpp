@@ -90,5 +90,9 @@ void SDLRenderer::set_render_color(Color color) {
   SDL_SetRenderDrawColor(m_renderer, r, g, b, a);
 }
 SDLRenderer::SDLRenderer(SDL_Renderer *renderer) : m_renderer(renderer) {}
+void SDLRenderer::draw_rect(int32_t x, int32_t y, int32_t width, int32_t height, Color) {}
+void SDLRenderer::draw_rect(Rect const &, Color) {}
+void SDLRenderer::draw_circle(int32_t x, int32_t y, size_t radius, Color) {}
+void SDLRenderer::clear() {}
 
 } // namespace sts
