@@ -7,9 +7,27 @@
 #include "Engine.hpp"
 #include "Exception.hpp"
 
+using namespace std::chrono_literals;
+
 int main(int argc, char* argv[]) {
     try {
-        auto renderer = sts::Engine::create_renderer(640, 400, "Stellar Salvage");
+        auto const renderer = sts::Engine::create_renderer(640, 400, "Stellar Salvage");
+        bool running = true;
+        sts::Rect constexpr rect{32,32,100,100};
+
+        auto const start = std::chrono::system_clock::now();
+
+        while(running) {
+            if(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now()-start) > 5000ms) {
+                running = false;
+            }
+            renderer->clear();
+            renderer->draw_filled_rect(rect, sts::Color::CYAN);
+            renderer->draw_filled_circle(200, 200, 32, sts::Color::PLUM);
+            renderer->present();
+
+            std::this_thread::sleep_for(1000ms/60);
+        }
     } catch(sts::EngineError const& e) {
         spdlog::error(e.what());
     }

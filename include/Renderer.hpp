@@ -51,10 +51,11 @@ namespace sts {
     public:
         virtual ~Renderer()= default;
 
-        virtual void draw_rect(int32_t x, int32_t y, int32_t width, int32_t height, Color) = 0;
-        virtual void draw_rect(Rect const&, Color) = 0;
-        virtual void draw_circle(int32_t x, int32_t y, size_t radius, Color) = 0;
+        virtual void draw_filled_rect(int32_t x, int32_t y, int32_t width, int32_t height, Color) = 0;
+        virtual void draw_filled_rect(Rect const&, Color) = 0;
+        virtual void draw_filled_circle(int32_t center_x, int32_t center_y, size_t radius, Color) = 0;
         virtual void clear() = 0;
+        virtual void present() = 0;
     };
 }
 

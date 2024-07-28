@@ -32,6 +32,6 @@ namespace sts {
         // Setup code here
     }
     Engine::~Engine() {
-        // Cleanup code here
+        SDL_Quit();
     }
 } // namespace sts
