@@ -6,7 +6,6 @@ set(SOURCE_FILES
 
 if (USE_SDL2)
     message(STATUS "Building with SDL2 backend")
-    #    add_subdirectory(backends/sdl2)
     list(APPEND SOURCE_FILES
             ${CMAKE_SOURCE_DIR}/backends/sdl2/Details.hpp
             ${CMAKE_SOURCE_DIR}/backends/sdl2/SDLRenderer.cpp
@@ -16,8 +15,13 @@ if (USE_SDL2)
     )
 elseif (USE_SFML)
     message(STATUS "Building with SFML backend")
-    message(FATAL_ERROR "SFML backend not implemented")
-    #    add_subdirectory(backends/sfml)
+    list(APPEND SOURCE_FILES
+            ${CMAKE_SOURCE_DIR}/backends/sfml/Details.hpp
+            ${CMAKE_SOURCE_DIR}/backends/sfml/SFMLRenderer.cpp
+            ${CMAKE_SOURCE_DIR}/backends/sfml/SFMLRenderer.hpp
+            ${CMAKE_SOURCE_DIR}/backends/sfml/Engine.cpp
+            #${CMAKE_SOURCE_DIR}/backends/sdl2/SDLDetails.cpp
+    )
 endif ()
 
 
@@ -27,8 +31,9 @@ add_library(sts_engine STATIC ${SOURCE_FILES})
 if (USE_SDL2)
     message(STATUS "Linking SDL2 libs")
     target_link_libraries(sts_engine PRIVATE SDL2::SDL2 spdlog::spdlog)
-elseif (USER_SFML)
+elseif (USE_SFML)
     message(STATUS "Linking SFML libs")
+    target_link_libraries(sts_engine PRIVATE sfml-graphics sfml-audio sfml-window)
 endif ()
 target_include_directories(sts_engine PRIVATE ${CMAKE_SOURCE_DIR}/include)
 set_target_properties(sts_engine PROPERTIES

@@ -10,7 +10,6 @@
 #include "Renderer.hpp"
 
 namespace sts {
-    class Details;
 
     class Engine {
     public:
