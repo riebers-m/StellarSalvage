@@ -23,7 +23,7 @@ namespace sts {
         [[nodiscard]] static std::shared_ptr<Renderer> create_renderer(size_t window_width, size_t window_height,
                                                                 std::string const &window_title,
                                                                 Engine const &engine = instance());
-
+        static bool is_window_open();
     private:
         Engine();
 

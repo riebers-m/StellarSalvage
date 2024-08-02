@@ -17,10 +17,10 @@ elseif (USE_SFML)
     message(STATUS "Building with SFML backend")
     list(APPEND SOURCE_FILES
             ${CMAKE_SOURCE_DIR}/backends/sfml/Details.hpp
+            ${CMAKE_SOURCE_DIR}/backends/sfml/SFMLDetails.cpp
             ${CMAKE_SOURCE_DIR}/backends/sfml/SFMLRenderer.cpp
             ${CMAKE_SOURCE_DIR}/backends/sfml/SFMLRenderer.hpp
             ${CMAKE_SOURCE_DIR}/backends/sfml/Engine.cpp
-            #${CMAKE_SOURCE_DIR}/backends/sdl2/SDLDetails.cpp
     )
 endif ()
 
@@ -33,7 +33,7 @@ if (USE_SDL2)
     target_link_libraries(sts_engine PRIVATE SDL2::SDL2 spdlog::spdlog)
 elseif (USE_SFML)
     message(STATUS "Linking SFML libs")
-    target_link_libraries(sts_engine PRIVATE sfml-graphics sfml-audio sfml-window)
+    target_link_libraries(sts_engine PRIVATE sfml-graphics sfml-audio sfml-window spdlog::spdlog)
 endif ()
 target_include_directories(sts_engine PRIVATE ${CMAKE_SOURCE_DIR}/include)
 set_target_properties(sts_engine PROPERTIES

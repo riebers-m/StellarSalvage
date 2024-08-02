@@ -10,6 +10,13 @@
 namespace sts {
     static std::unique_ptr<Details> m_details{nullptr};
 
+    Engine::Engine() {
+        // Setup code here
+    }
+    Engine::~Engine() {
+        SDL_Quit();
+    }
+
     Engine const &Engine::instance() {
         static auto engine = Engine{};
         return engine;
@@ -28,10 +35,11 @@ namespace sts {
         }
         throw EngineError(std::format("renderer not properly initialized"));
     }
-    Engine::Engine() {
-        // Setup code here
-    }
-    Engine::~Engine() {
-        SDL_Quit();
+
+    bool is_window_open() {
+        if(m_details->get_window()!= nullptr) {
+            return true;
+        }
+        return false;
     }
 } // namespace sts

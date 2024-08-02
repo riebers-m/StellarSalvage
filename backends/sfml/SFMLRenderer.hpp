@@ -24,7 +24,7 @@ public:
 private:
     void set_render_color(Color);
 
-    sf::RenderWindow *m_renderer;
+    sf::RenderWindow *m_window;
 };
 
 }

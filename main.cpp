@@ -12,18 +12,22 @@ using namespace std::chrono_literals;
 int main(int argc, char* argv[]) {
     try {
         auto const renderer = sts::Engine::create_renderer(640, 400, "Stellar Salvage");
+        if(!renderer) {
+            spdlog::error("could not initialize renderer");
+            return -1;
+        }
         bool running = true;
         sts::Rect constexpr rect{32,32,100,100};
 
         auto const start = std::chrono::system_clock::now();
 
-        while(running) {
+        while(sts::Engine::is_window_open()) {
             if(std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now()-start) > 5000ms) {
                 running = false;
             }
             renderer->clear();
             renderer->draw_filled_rect(rect, sts::Color::CYAN);
-            renderer->draw_filled_circle(200, 200, 32, sts::Color::PLUM);
+            renderer->draw_filled_circle(0, 0, 32, sts::Color::PLUM);
             renderer->present();
 
             std::this_thread::sleep_for(1000ms/60);
