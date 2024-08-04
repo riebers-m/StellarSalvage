@@ -2,6 +2,7 @@ set(SOURCE_FILES
         ${CMAKE_SOURCE_DIR}/include/Renderer.hpp
         ../include/Engine.hpp
         ../include/Exception.hpp
+        ../include/KeyCode.hpp
 )
 
 if (USE_SDL2)
@@ -16,6 +17,8 @@ if (USE_SDL2)
 elseif (USE_SFML)
     message(STATUS "Building with SFML backend")
     list(APPEND SOURCE_FILES
+            ${CMAKE_SOURCE_DIR}/backends/sfml/SFMLKeyCode.hpp
+            ${CMAKE_SOURCE_DIR}/backends/sfml/SFMLKeyCode.cpp
             ${CMAKE_SOURCE_DIR}/backends/sfml/Details.hpp
             ${CMAKE_SOURCE_DIR}/backends/sfml/SFMLDetails.cpp
             ${CMAKE_SOURCE_DIR}/backends/sfml/SFMLRenderer.cpp

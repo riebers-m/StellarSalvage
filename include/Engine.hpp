@@ -8,9 +8,9 @@
 #include <memory>
 #include <string>
 #include "Renderer.hpp"
+#include "KeyCode.hpp"
 
 namespace sts {
-
     class Engine {
     public:
         Engine(Engine const &) = delete;
@@ -24,6 +24,8 @@ namespace sts {
                                                                 std::string const &window_title,
                                                                 Engine const &engine = instance());
         static bool is_window_open();
+        static bool window_focused();
+        static bool is_key_pressed(KeyCode);
     private:
         Engine();
 

@@ -9,17 +9,34 @@
 
 using namespace std::chrono_literals;
 
-void handle_events() {
+sts::Rect player{32, 32, 200, 200};
+sts::Rect delta{};
 
+void handle_events() {
+    delta.x = 0;
+    delta.y = 0;
+    if(sts::Engine::is_key_pressed(sts::KeyCode::S)) {
+        delta.x = -5;
+    }
+    if(sts::Engine::is_key_pressed(sts::KeyCode::F)) {
+        delta.x = 5;
+    }
+    if(sts::Engine::is_key_pressed(sts::KeyCode::E)) {
+        delta.y = -5;
+    }
+    if(sts::Engine::is_key_pressed(sts::KeyCode::D)) {
+        delta.y = 5;
+    }
 }
 
 void update() {
-
+    player.x += delta.x;
+    player.y += delta.y;
 }
 
 void draw(const std::shared_ptr<sts::Renderer>& renderer) {
     renderer->clear();
-    renderer->draw_filled_rect({32,32,100,100}, sts::Color::CYAN);
+    renderer->draw_filled_rect(player, sts::Color::CYAN);
     renderer->draw_filled_circle(200, 200, 32, sts::Color::PLUM);
     renderer->present();
 }
