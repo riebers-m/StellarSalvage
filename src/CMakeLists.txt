@@ -17,6 +17,8 @@ if (USE_SDL2)
 elseif (USE_SFML)
     message(STATUS "Building with SFML backend")
     list(APPEND SOURCE_FILES
+            ${CMAKE_SOURCE_DIR}/backends/sfml/SFMLMouseButton.hpp
+            ${CMAKE_SOURCE_DIR}/backends/sfml/SFMLMouseButton.cpp
             ${CMAKE_SOURCE_DIR}/backends/sfml/SFMLKeyCode.hpp
             ${CMAKE_SOURCE_DIR}/backends/sfml/SFMLKeyCode.cpp
             ${CMAKE_SOURCE_DIR}/backends/sfml/Details.hpp

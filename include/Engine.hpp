@@ -26,6 +26,7 @@ namespace sts {
         static bool is_window_open();
         static bool window_focused();
         static bool is_key_pressed(KeyCode);
+        static bool is_mouse_pressed(MouseButton);
     private:
         Engine();
 
