@@ -9,6 +9,7 @@
 #include <string>
 #include "Renderer.hpp"
 #include "KeyCode.hpp"
+#include "core/Vector2D.hpp"
 
 namespace sts {
     class Engine {
@@ -27,6 +28,7 @@ namespace sts {
         static bool window_focused();
         static bool is_key_pressed(KeyCode);
         static bool is_mouse_pressed(MouseButton);
+        static std::optional<core::Vector2D> get_mouse_position();
     private:
         Engine();
 
