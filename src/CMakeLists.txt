@@ -38,8 +38,22 @@ elseif (USE_SFML)
     message(STATUS "Linking SFML libs")
     target_link_libraries(sts_engine PRIVATE sfml-graphics sfml-audio sfml-window spdlog::spdlog)
 endif ()
-target_include_directories(sts_engine PRIVATE ${CMAKE_SOURCE_DIR}/include)
+target_include_directories(sts_engine PRIVATE
+        ${CMAKE_SOURCE_DIR}/include
+        )
 set_target_properties(sts_engine PROPERTIES
         CXX_STANDARD 20
         CXX_STANDARD_REQUIRED ON
 )
+
+# build main
+add_executable(${PROJECT_NAME} main.cpp
+        ${CMAKE_SOURCE_DIR}/include/core/Vector2D.hpp
+        core/Vector2D.cpp
+
+)
+target_link_libraries(${PROJECT_NAME} spdlog::spdlog sts_engine)
+target_include_directories(${PROJECT_NAME} PRIVATE
+        ${CMAKE_SOURCE_DIR}/include
+        ${CMAKE_SOURCE_DIR}/include/core)
+target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)
