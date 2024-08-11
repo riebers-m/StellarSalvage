@@ -102,12 +102,29 @@ enemies to progress through levels.
 - Options
 - Main Menu
 
-## Controls
+### Controls
 
-- **Movement**: Arrow keys or WASD for moving the spaceship.
-- **Shooting**: Spacebar or left mouse button to shoot projectiles.
-- **Interaction**: E key or right mouse button to interact with objects (move asteroids).
-- **Pause**: Escape key to pause the game and bring up the pause menu.
+- **Movement**: The spaceship moves towards the direction of the mouse pointer when the movement key is held down. The movement key could be one of the following:
+  - **W Key** (default) or any custom key set by the player. While the movement key is held down, the spaceship continuously accelerates towards the mouse pointer, allowing precise control over direction and speed.
+  - **Shift Key** can be used to activate a temporary speed boost while moving.
+
+- **Shooting**:
+  - **Main Weapon (Primary Fire)**: Press and hold the **Left Mouse Button** to continuously fire the spaceship's main weapon in the direction the spaceship is facing (towards the mouse pointer). This weapon is designed for regular combat and has a steady rate of fire.
+  - **Secondary Weapon (Secondary Fire)**: Press and hold the **Right Mouse Button** to fire the spaceship's secondary weapon. This weapon might have different properties, such as a slower fire rate, higher damage, or area-of-effect impact. The secondary weapon could also be a chargeable weapon that becomes more powerful the longer the right mouse button is held.
+
+- **Interaction**:
+  - **E Key** or **Middle Mouse Button**: Use this to interact with objects in the game world, such as moving asteroids or activating switches.
+
+- **Pause**:
+  - **Escape Key**: Press to pause the game and bring up the pause menu, where you can resume, adjust settings, or return to the main menu.
+
+### Additional Considerations
+
+- **Mouse Sensitivity**: Allow players to adjust mouse sensitivity in the settings to ensure smooth control over the spaceship's movement and targeting.
+- **Customizable Controls**: Include an option in the settings menu for players to remap the controls according to their preferences. This is particularly important for accessibility.
+- **Visual Indicators**: When the movement key is held, a visual indicator (such as a small arrow or a trail) could show the direction of movement towards the mouse pointer, helping players align their movement with their intended trajectory.
+- **Aim Assist (Optional)**: Consider implementing a light aim assist for players to help with precision when targeting fast-moving enemies. This could be especially useful for less experienced players.
+
 
 ## Art and Sound
 

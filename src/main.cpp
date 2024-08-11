@@ -55,7 +55,6 @@ void update() {
     player.y += static_cast<int32_t>(delta.y);
 
     rocket = core::add(rocket, rocket_delta);
-    std::cout << std::format("{},{}\n", static_cast<int32_t>(rocket.x), static_cast<int32_t>(rocket.y));
 }
 
 void draw(const std::shared_ptr<sts::Renderer> &renderer) {
