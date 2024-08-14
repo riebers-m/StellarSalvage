@@ -52,6 +52,8 @@ set_target_properties(sts_engine PROPERTIES
 add_executable(${PROJECT_NAME} main.cpp
         ${CMAKE_SOURCE_DIR}/include/core/Vector2D.hpp
         core/Vector2D.cpp
+        ${CMAKE_SOURCE_DIR}/include/core/SpaceShip.hpp
+        core/SpaceShip.cpp
 
 )
 target_link_libraries(${PROJECT_NAME} spdlog::spdlog sts_engine)
