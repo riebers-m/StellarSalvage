@@ -43,10 +43,6 @@ endif ()
 target_include_directories(sts_engine PRIVATE
         ${CMAKE_SOURCE_DIR}/include
         )
-set_target_properties(sts_engine PROPERTIES
-        CXX_STANDARD 20
-        CXX_STANDARD_REQUIRED ON
-)
 
 # build main
 add_executable(${PROJECT_NAME} main.cpp
@@ -54,10 +50,11 @@ add_executable(${PROJECT_NAME} main.cpp
         core/Vector2D.cpp
         ${CMAKE_SOURCE_DIR}/include/core/SpaceShip.hpp
         core/SpaceShip.cpp
+        ${CMAKE_SOURCE_DIR}/include/core/Collision.hpp
+        core/Collision.cpp
 
 )
 target_link_libraries(${PROJECT_NAME} spdlog::spdlog sts_engine)
 target_include_directories(${PROJECT_NAME} PRIVATE
         ${CMAKE_SOURCE_DIR}/include
         ${CMAKE_SOURCE_DIR}/include/core)
-target_compile_features(${PROJECT_NAME} PUBLIC cxx_std_20)

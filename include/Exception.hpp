@@ -11,23 +11,33 @@
 
 namespace sts {
 
-class EngineError : protected std::exception {
-public:
-  explicit EngineError(std::string_view const message,
-                       std::filesystem::path const &file, auto line)
-      : m_message{std::format("{}:{}: {}", file.filename().string(), line,
-                              message)} {}
+    class EngineError : protected std::exception {
+    public:
+        explicit EngineError(std::string_view const message, std::filesystem::path const &file, auto line) :
+            m_message{std::format("{}:{}: {}", file.filename().string(), line, message)} {}
 
-  [[nodiscard]] const char *what() const noexcept override {
-    return m_message.c_str();
-  }
+        [[nodiscard]] const char *what() const noexcept override { return m_message.c_str(); }
 
-protected:
-  std::string m_message;
-};
+    protected:
+        std::string m_message;
+    };
 
-#define EngineError(message)                                                   \
-  EngineError { message, __FILE__, __LINE__ }
+    class CoreError : protected std::exception {
+    public:
+        explicit CoreError(std::string_view const message, std::filesystem::path const &file, auto line) :
+            m_message{std::format("{}:{}: {}", file.filename().string(), line, message)} {}
+
+        [[nodiscard]] const char *what() const noexcept override { return m_message.c_str(); }
+
+    protected:
+        std::string m_message;
+    };
+
+#define EngineError(message)                                                                                           \
+    EngineError { message, __FILE__, __LINE__ }
+
+#define CoreError(message)                                                                                           \
+    CoreError { message, __FILE__, __LINE__ }
 
 } // namespace sts
 #endif // STELLAR_SALVAGE_EXCEPTION_HPP

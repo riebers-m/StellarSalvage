@@ -2,4 +2,5 @@
 [x]  Implement Key and Mouse inputs
 [x]  Implement Vector math class
 [x]  Implement Ship movement
-[]  Refactor ship movement
+[x]  Refactor ship movement
+[]  Write Bounding Sphere Collision Tests
