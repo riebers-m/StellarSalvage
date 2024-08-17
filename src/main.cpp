@@ -12,7 +12,8 @@
 
 using namespace std::chrono_literals;
 
-core::ShipState space_ship;
+core::ShipState space_ship = core::create_ship(core::Vector2D{200,200}, 4, 1.5, .15);
+
 sts::Rect player{32, 32, 200, 200};
 core::Vector2D delta{0, 0};
 
@@ -58,27 +59,26 @@ void handle_mouse() {
 
 void handle_events() { handle_ship(); }
 
-void update() {
+void update_ship() {
     if (update_space_pos) {
         if (auto const mouse_pos = sts::Engine::get_mouse_position(); mouse_pos.has_value()) {
             auto const direction = core::subtract(mouse_pos.value(), space_ship.pos);
-            if(auto const direction_length = core::magnitude(direction);direction_length > 32) {
-                space_ship.acc = set_limit(direction, 1);
+            if(auto const direction_length = core::magnitude(direction);direction_length > 40) {
+                space_ship.acc = set_limit(direction, space_ship.acceleration_limit);
             }
         }
     }
-    // apply friction
-    auto const normal_vec = core::multiply(space_ship.vel, -1);
-    if(auto const friction = normalize(normal_vec);friction.has_value()) {
-        auto const applied_friction = core::set_limit(friction.value(), .2);
-        space_ship.acc = core::add(space_ship.acc, applied_friction);
-    }
     space_ship = core::update_ship_position(space_ship);
+}
+
+void update() {
+    update_ship();
 }
 
 void draw(const std::shared_ptr<sts::Renderer> &renderer) {
     renderer->clear();
     renderer->draw_filled_rect(player, sts::Color::CYAN);
+    spdlog::info(std::format("pos: {},{}", space_ship.pos.x, space_ship.pos.y));
     renderer->draw_filled_circle(static_cast<int32_t>(space_ship.pos.x), static_cast<int32_t>(space_ship.pos.y), 32,
                                  sts::Color::VIOLET);
     renderer->present();

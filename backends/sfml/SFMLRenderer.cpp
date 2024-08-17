@@ -111,7 +111,10 @@ void sts::SFMLRenderer::draw_filled_circle(int32_t center_x, int32_t center_y, s
     auto const [r, g, b, a] = rgba.value();
 
     sf::CircleShape circle{static_cast<float>(radius)};
-    circle.setPosition(static_cast<float>(center_x - static_cast<int32_t>(radius)), static_cast<float>(center_y - static_cast<int32_t>(radius)));
+    auto const circle_x = static_cast<float>(center_x - static_cast<int32_t>(radius));
+    auto const circle_y = static_cast<float>(center_y - static_cast<int32_t>(radius));
+
+    circle.setPosition(circle_x, circle_y);
     circle.setFillColor(sf::Color{r, g, b, a});
 
     m_window->draw(circle);
