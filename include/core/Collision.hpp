@@ -53,5 +53,7 @@ namespace core {
      */
     bool collision_check_bounding_sphere(Vector2D const &pos1, std::size_t radius1, Vector2D const &pos2,
                                          std::size_t radius2);
+
+    bool collision_check_oriented_bounding_sphere(Vector2D const& tl1, Vector2D const& br1, Vector2D const& tl2, Vector2D const& br2);
 } // namespace core
 #endif // COLLISION_HPP
