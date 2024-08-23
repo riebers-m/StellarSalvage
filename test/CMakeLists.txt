@@ -18,3 +18,12 @@ add_executable(TestCollision
 target_include_directories(TestCollision PRIVATE ${CMAKE_SOURCE_DIR}/include)
 target_link_libraries(TestCollision PRIVATE Catch2::Catch2WithMain)
 add_test(NAME TestCollisionTest COMMAND TestCollision)
+
+add_executable(TestEntityComponentSystem
+        core/TestEntityComponentSystem.cpp
+        ${CMAKE_SOURCE_DIR}/src/core/Vector2D.cpp
+        ${CMAKE_SOURCE_DIR}/src/core/EntityComponentSystem.cpp
+)
+target_include_directories(TestEntityComponentSystem PRIVATE ${CMAKE_SOURCE_DIR}/include)
+target_link_libraries(TestEntityComponentSystem PRIVATE Catch2::Catch2WithMain)
+add_test(NAME TestEntityComponentSystemTest COMMAND TestEntityComponentSystem)
