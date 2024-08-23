@@ -3,7 +3,6 @@
 //
 
 #include "core/Collision.hpp"
-#include "Exception.hpp"
 
 namespace core {
     bool collision_check_AABB(Vector2D const& pos1, Vector2D const& size1, Vector2D const& pos2, Vector2D const& size2) {
@@ -15,6 +14,6 @@ namespace core {
             throw sts::CoreError(std::format("invalid radius: {}, {}", radius1, radius2));
         }
         auto const distance = magnitude(subtract(pos1, pos2));
-        return (static_cast<float>(radius1+radius2)-distance) > 0.001;
+        return (static_cast<float>(radius1+radius2)-distance) >= 0;
     }
 }
