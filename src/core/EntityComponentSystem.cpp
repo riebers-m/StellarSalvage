@@ -28,4 +28,19 @@ namespace core {
             throw sts::CoreError(std::format("Entity out of range: {}", e.what()));
         }
     }
+
+    std::pair<bool, Entities> delete_entity(Entities entities, Entity entity) {
+        if(entities.empty()) {
+            return std::make_pair(false, entities);
+        }
+
+        for(auto itr=entities.begin();itr!=entities.end();) {
+            if(*itr == entity) {
+                entities.erase(itr);
+                return std::make_pair(true, entities);
+            }
+            ++itr;
+        }
+        return std::make_pair(false, entities);
+    }
 }

@@ -71,3 +71,52 @@ TEST_CASE("create_entity function tests", "[create_entity]") {
         REQUIRE_THROWS_AS(core::create_entity(entities, maxEntityCount), sts::CoreError);
     }
 }
+
+TEST_CASE("delete_entity function tests", "[delete_entity]") {
+
+    SECTION("Successful Deletion") {
+        core::Entities entities = { core::Entity{1}, core::Entity{2}, core::Entity{3} };
+
+        // Attempt to delete an existing entity
+        auto const entityToDelete = core::Entity{2};
+        auto [success, updatedEntities] = core::delete_entity(entities, entityToDelete);
+
+        // Check if the deletion was successful
+        REQUIRE(success == true);
+
+        // Ensure the entity was removed from the set
+        REQUIRE(updatedEntities.find(entityToDelete) == updatedEntities.end());
+
+        // Ensure the size of the collection has decreased
+        REQUIRE(updatedEntities.size() == 2);
+    }
+
+    SECTION("Entity Not Found") {
+        core::Entities entities = { core::Entity{1}, core::Entity{2}, core::Entity{3} };
+
+        // Attempt to delete an entity that doesn't exist
+        auto const entityToDelete = core::Entity{4};  // Entity 4 is not in the set
+        auto [success, updatedEntities] = core::delete_entity(entities, entityToDelete);
+
+        // Check if the deletion was unsuccessful
+        REQUIRE(success == false);
+
+        // Ensure the original collection remains unchanged
+        REQUIRE(updatedEntities.size() == entities.size());
+        REQUIRE(updatedEntities == entities);
+    }
+
+    SECTION("Deletion from Empty Collection") {
+        core::Entities entities;  // Empty collection
+
+        // Attempt to delete an entity from an empty collection
+        auto const entityToDelete = core::Entity{1};
+        auto [success, updatedEntities] = core::delete_entity(entities, entityToDelete);
+
+        // Check if the deletion was unsuccessful
+        REQUIRE(success == false);
+
+        // Ensure the collection is still empty
+        REQUIRE(updatedEntities.empty() == true);
+    }
+}
