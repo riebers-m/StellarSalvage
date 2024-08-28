@@ -39,5 +39,12 @@ namespace sts {
 #define CoreError(message)                                                                                           \
     CoreError { message, __FILE__, __LINE__ }
 
+    enum class error {
+        ok,
+        entity_limit,
+        invalid_entity,
+        entity_exists,
+    };
+
 } // namespace sts
 #endif // STELLAR_SALVAGE_EXCEPTION_HPP

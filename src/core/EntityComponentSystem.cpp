@@ -7,40 +7,24 @@
 #include "Exception.hpp"
 
 namespace core {
-    using Entities = std::set<std::size_t>;
-    // static Entities entities{};
-
-    std::pair<Entity, Entities> create_entity(Entities entities, std::size_t max_entity_count) {
-        try {
-            if(entities.size() > max_entity_count) {
-                throw sts::CoreError(std::format("Could not create entity, max entity count reached ({})", max_entity_count));
-            }
-
-            for(auto i=0;i<max_entity_count;i++) {
-                if(!entities.contains(i)) {
-                    if(auto const [itr, inserted] = entities.insert(i);inserted) {
-                        return std::make_pair(i,entities);
-                    }
-                }
-            }
-            throw sts::CoreError(std::format("Could not create entity"));
-        } catch(std::out_of_range const& e) {
-            throw sts::CoreError(std::format("Entity out of range: {}", e.what()));
+    std::pair<Entity, Entities> create_entity(Entities && entities) noexcept {
+        Entity new_entity;
+        if (!entities.available_entities.empty()) {
+            new_entity = entities.available_entities.front();
+            entities.available_entities.pop();
+        } else {
+            new_entity = entities.totoal_entity_count++;
         }
+        entities.living_entities.insert(new_entity);
+        return std::make_pair(new_entity, std::move(entities));
     }
 
-    std::pair<bool, Entities> delete_entity(Entities entities, Entity entity) {
-        if(entities.empty()) {
-            return std::make_pair(false, entities);
+    std::pair<sts::error, Entities> destroy_entity(Entity entity, Entities && entities) noexcept {
+        if (auto itr = entities.living_entities.find(entity); itr != entities.living_entities.end()) {
+            entities.available_entities.push(*itr);
+            entities.living_entities.erase(itr);
+            return std::make_pair(sts::error::ok, std::move(entities));
         }
-
-        for(auto itr=entities.begin();itr!=entities.end();) {
-            if(*itr == entity) {
-                entities.erase(itr);
-                return std::make_pair(true, entities);
-            }
-            ++itr;
-        }
-        return std::make_pair(false, entities);
+        return std::make_pair(sts::error::invalid_entity, std::move(entities));
     }
-}
+} // namespace core
