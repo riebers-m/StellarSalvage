@@ -21,6 +21,7 @@ enemies to progress through levels.
 7. [Art and Sound](#art-and-sound)
 8. [Technical Requirements](#technical-requirements)
 9. [Development Timeline](#development-timeline)
+10. [Architecture](#architecture)
 
 ## Game Concept
 
@@ -102,7 +103,7 @@ enemies to progress through levels.
 - Options
 - Main Menu
 
-### Controls
+## Controls
 
 - **Movement**: The spaceship moves towards the direction of the mouse pointer when the movement key is held down. The movement key could be one of the following:
   - **W Key** (default) or any custom key set by the player. While the movement key is held down, the spaceship continuously accelerates towards the mouse pointer, allowing precise control over direction and speed.
@@ -124,7 +125,6 @@ enemies to progress through levels.
 - **Customizable Controls**: Include an option in the settings menu for players to remap the controls according to their preferences. This is particularly important for accessibility.
 - **Visual Indicators**: When the movement key is held, a visual indicator (such as a small arrow or a trail) could show the direction of movement towards the mouse pointer, helping players align their movement with their intended trajectory.
 - **Aim Assist (Optional)**: Consider implementing a light aim assist for players to help with precision when targeting fast-moving enemies. This could be especially useful for less experienced players.
-
 
 ## Art and Sound
 
@@ -154,10 +154,10 @@ enemies to progress through levels.
 ### Hardware
 
 - Minimum:
-    - CPU: Dual-core processor
-    - RAM: 2 GB
-    - Graphics: Integrated graphics
-    - Storage: 100 MB available space
+  - CPU: Dual-core processor
+  - RAM: 2 GB
+  - Graphics: Integrated graphics
+  - Storage: 100 MB available space
 
 ## Development Timeline
 
@@ -172,8 +172,31 @@ enemies to progress through levels.
 7. **Week 13-14**: Testing, bug fixing, and polish.
 8. **Week 15**: Final testing and release preparation.
 
+## Architecture
+
+### Design Pattern: Functional Core, Imperative Shell
+
+**Stellar Salvage** is designed using the **Functional Core, Imperative Shell** architecture pattern. This approach ensures that the core logic of the game is highly testable, isolated from external dependencies, and maintains a clear separation of concerns between the game logic and the system-specific operations.
+
+### Core Logic
+
+The core logic is built around an **Entity Component System (ECS)**, which is responsible for managing game entities and their interactions. The core components include:
+
+- **Entities**: Represent individual game objects (e.g., spaceship, enemies, asteroids).
+- **Components**: Define specific attributes or behaviors (e.g., position, health, movement).
+- **Systems**: Implement the logic that operates on entities and their components (e.g., collision detection, movement, rendering).
+
+### Imperative Shell
+
+The **Imperative Shell** abstracts the platform-specific and rendering backend details. It interfaces with the core logic to handle tasks such as:
+
+- **Rendering**: Drawing the game world and entities on the screen.
+- **Input Handling**: Processing player inputs (e.g., keyboard, mouse).
+- **Audio**: Managing sound effects and background music.
+- **Resource Management**: Loading and managing game assets like textures, sounds, and levels.
+
+This separation allows the core game logic to be developed and tested independently of the rendering engine or platform, promoting cleaner code and easier maintenance.
+
 ## Conclusion
 
-**Stellar Salvage** aims to provide an engaging and challenging space adventure for players of all ages. With its core
-mechanics, progressively challenging levels, and vibrant art style, it promises to be an exciting addition to the
-action-adventure genre.
+**Stellar Salvage** aims to provide an engaging and challenging space adventure for players of all ages. With its core mechanics, progressively challenging levels, vibrant art style, and a robust architecture, it promises to be an exciting addition to the action-adventure genre.
