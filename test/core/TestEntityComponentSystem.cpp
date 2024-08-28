@@ -78,7 +78,7 @@ TEST_CASE("add component function tests", "[add_component]") {
     core::ComponentBase<MockComponent, 1024> mock_components;
 
     SECTION("Try to add component") {
-        auto const [success, new_component] = core::add_component(0, MockComponent{1,2}, std::move(mock_components));
+        auto const [success, new_component] = core::add_component(0, MockComponent{1, 2}, std::move(mock_components));
         REQUIRE(success == sts::error::ok);
         REQUIRE(new_component.components.at(0).a == 1);
         REQUIRE(new_component.components.at(0).b == 2);
@@ -93,8 +93,8 @@ TEST_CASE("delete_component removes an existing entity and maintains component a
 
     core::ComponentBase<MockComponent, 5> component_array;
 
-    for(int i=0;i<5;i++) {
-        auto [success, new_component_array] = core::add_component(i, MockComponent{i,i}, std::move(component_array));
+    for (int i = 0; i < 5; i++) {
+        auto [success, new_component_array] = core::add_component(i, MockComponent{i, i}, std::move(component_array));
         component_array = std::move(new_component_array);
     }
 
@@ -134,5 +134,58 @@ TEST_CASE("delete_component handles empty component arrays correctly", "[compone
         REQUIRE(updated_component_array.entity_count == 0); // No change in entity count
         REQUIRE(updated_component_array.entity_to_index.empty()); // Maps should remain empty
         REQUIRE(updated_component_array.index_to_entity.empty());
+    }
+}
+
+TEST_CASE("retrieve simple component", "[component_system]") {
+    struct MockComponent {
+        int a{};
+        std::string b{};
+    };
+    core::ComponentBase<MockComponent, 5> component_array;
+
+    SECTION("Simple retrieve from compontent array") {
+        core::Entity ent = 0;
+        auto [success, new_component_array] =
+                core::add_component(ent, MockComponent{1, "Hello There"}, std::move(component_array));
+        REQUIRE(success == sts::error::ok);
+        auto const component = core::get_component(ent, new_component_array);
+        REQUIRE(component.has_value());
+        REQUIRE(component.value().a == 1);
+        REQUIRE(component.value().b == "Hello There");
+    }
+
+    SECTION("Retrieve every compontent from array") {
+        core::Entity ent = 0;
+
+        std::array<int, 3> constexpr range = {0, 1, 2};
+
+        for (auto const i: range) {
+            auto [success, new_component_array] =
+                    core::add_component(i, MockComponent{i, std::format("Hello {}", i)}, std::move(component_array));
+            REQUIRE(success == sts::error::ok);
+            component_array = std::move(new_component_array);
+        }
+
+        for (auto const i: range) {
+            auto const component = core::get_component(i, component_array);
+            REQUIRE(component.has_value());
+            REQUIRE(component.value().a == i);
+            REQUIRE(component.value().b == std::format("Hello {}", i));
+        }
+    }
+
+    SECTION("Retrieve invalid component from array") {
+        core::Entity ent = 0;
+        auto [success, new_component_array] =
+                core::add_component(ent, MockComponent{1, "Hello There"}, std::move(component_array));
+        REQUIRE(success == sts::error::ok);
+        auto const component = core::get_component(1, new_component_array);
+        REQUIRE(!component.has_value());
+    }
+
+    SECTION("Retrieve from empty array") {
+        auto const component = core::get_component(1, component_array);
+        REQUIRE(!component.has_value());
     }
 }

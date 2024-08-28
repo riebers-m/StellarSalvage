@@ -7,7 +7,7 @@
 #include "Exception.hpp"
 
 namespace core {
-    std::pair<Entity, Entities> create_entity(Entities && entities) noexcept {
+    std::pair<Entity, Entities> create_entity(Entities &&entities) noexcept {
         Entity new_entity;
         if (!entities.available_entities.empty()) {
             new_entity = entities.available_entities.front();
@@ -19,7 +19,7 @@ namespace core {
         return std::make_pair(new_entity, std::move(entities));
     }
 
-    std::pair<sts::error, Entities> destroy_entity(Entity entity, Entities && entities) noexcept {
+    std::pair<sts::error, Entities> destroy_entity(Entity entity, Entities &&entities) noexcept {
         if (auto itr = entities.living_entities.find(entity); itr != entities.living_entities.end()) {
             entities.available_entities.push(*itr);
             entities.living_entities.erase(itr);

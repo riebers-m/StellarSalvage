@@ -37,7 +37,7 @@ namespace core {
      *
      * @note The entity ID is guaranteed to be unique within the Entities struct.
      */
-    std::pair<Entity, Entities> create_entity(Entities && entities) noexcept;
+    std::pair<Entity, Entities> create_entity(Entities &&entities) noexcept;
 
     /**
      * @brief Destroys an existing entity within the provided Entities struct.
@@ -55,7 +55,7 @@ namespace core {
      * @note The function does not throw errors but will return `false` if the
      * entity is not found in the set of living entities.
      */
-    std::pair<sts::error, Entities> destroy_entity(Entity entity, Entities && entities) noexcept;
+    std::pair<sts::error, Entities> destroy_entity(Entity entity, Entities &&entities) noexcept;
 
     template<typename T, std::size_t N>
     struct ComponentBase {
@@ -66,9 +66,32 @@ namespace core {
         ComponentArray components;
     };
 
+    /**
+     * @brief Adds a component to the specified entity within the component array.
+     *
+     * This function attempts to add a given component to the entity in the provided component array.
+     * If the entity already has a component in the array, the function returns an error and the
+     * original component array. Otherwise, the component is added, the entity and component mappings
+     * are updated, and the modified component array is returned.
+     *
+     * @tparam Component The type of the component being added.
+     * @tparam T The type of the elements stored within the ComponentBase's component array.
+     * @tparam N The maximum number of components that the ComponentBase can hold.
+     *
+     * @param entity The entity to which the component is being added.
+     * @param component The component to add to the entity.
+     * @param component_array The component array to which the component will be added. This parameter
+     *                        is passed as an rvalue reference, allowing the function to take ownership
+     *                        of it and modify it directly without unnecessary copies.
+     *
+     * @return A pair consisting of:
+     *         - `sts::error`: A status indicating whether the operation was successful or if the entity
+     *           already had a component (resulting in an error).
+     *         - `ComponentBase<T, N>`: The updated component array after the operation.
+     */
     template<typename Component, typename T, std::size_t N>
     std::pair<sts::error, ComponentBase<T, N>> add_component(Entity entity, Component const &component,
-                                                          ComponentBase<T, N> && component_array) {
+                                                             ComponentBase<T, N> &&component_array) {
         static_assert(std::is_same_v<T, Component>, "Component <-> ComponentBase type miss match.");
         if (component_array.entity_to_index.contains(entity)) {
             return std::make_pair(sts::error::entity_exists, component_array);
@@ -84,11 +107,34 @@ namespace core {
         return std::make_pair(sts::error::entity_limit, component_array);
     }
 
+    /**
+     * @brief Removes a component associated with a specific entity from the component array.
+     *
+     * This function attempts to delete a component that is associated with a given entity in the
+     * provided component array. If the entity is found, the component is removed, and the array is
+     * reorganized to maintain a contiguous block of active components. The last component in the array
+     * is moved to the location of the removed component to fill the gap, and the mappings between
+     * entities and components are updated accordingly.
+     *
+     * @tparam T The type of the components stored within the ComponentBase's component array.
+     * @tparam N The maximum number of components that the ComponentBase can hold.
+     *
+     * @param entity The entity whose component is to be deleted.
+     * @param component_array The component array from which the component will be deleted. This
+     *                        parameter is passed as an rvalue reference, allowing the function to take
+     *                        ownership of it and modify it directly without unnecessary copies.
+     *
+     * @return A pair consisting of:
+     *         - `sts::error`: A status indicating whether the deletion was successful (`sts::error::ok`)
+     *           or if the entity was not found in the component array (`sts::error::invalid_entity`).
+     *         - `ComponentBase<T, N>`: The updated component array after the operation.
+     */
     template<typename T, std::size_t N>
-    std::pair<sts::error, ComponentBase<T,N>> delete_component(Entity entity, ComponentBase<T, N> &&component_array) {
-        if(auto const removed_entity=component_array.entity_to_index.find(entity);removed_entity!=component_array.entity_to_index.end()) {
+    std::pair<sts::error, ComponentBase<T, N>> delete_component(Entity entity, ComponentBase<T, N> &&component_array) {
+        if (auto const removed_entity = component_array.entity_to_index.find(entity);
+            removed_entity != component_array.entity_to_index.end()) {
             auto const index_removed_entity = removed_entity->second;
-            auto const index_last_entity = component_array.entity_count-1;
+            auto const index_last_entity = component_array.entity_count - 1;
             component_array.components[index_removed_entity] = component_array.components[index_last_entity];
 
             auto const last_entity = component_array.index_to_entity[index_last_entity];
@@ -104,8 +150,9 @@ namespace core {
     }
 
     template<typename T, std::size_t N>
-    std::optional<T> get_component(Entity entity, ComponentBase<T,N> const& component_array) {
-        if(auto const searched_entity=component_array.entity_to_index.find(entity);searched_entity!=component_array.entity_to_index.end()) {
+    std::optional<T> get_component(Entity entity, ComponentBase<T, N> const &component_array) {
+        if (auto const searched_entity = component_array.entity_to_index.find(entity);
+            searched_entity != component_array.entity_to_index.end()) {
             return component_array.components.at(searched_entity->second);
         }
         return {};
