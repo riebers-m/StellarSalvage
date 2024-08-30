@@ -149,15 +149,13 @@ TEST_CASE("retrieve simple component", "[component_system]") {
         auto [success, new_component_array] =
                 core::add_component(ent, MockComponent{1, "Hello There"}, std::move(component_array));
         REQUIRE(success == sts::error::ok);
-        auto const component = core::get_component(ent, new_component_array);
+        auto component = core::get_component(ent, new_component_array);
         REQUIRE(component.has_value());
         REQUIRE(component.value().a == 1);
         REQUIRE(component.value().b == "Hello There");
     }
 
     SECTION("Retrieve every compontent from array") {
-        core::Entity ent = 0;
-
         std::array<int, 3> constexpr range = {0, 1, 2};
 
         for (auto const i: range) {
@@ -168,7 +166,7 @@ TEST_CASE("retrieve simple component", "[component_system]") {
         }
 
         for (auto const i: range) {
-            auto const component = core::get_component(i, component_array);
+            auto component = core::get_component(i, component_array);
             REQUIRE(component.has_value());
             REQUIRE(component.value().a == i);
             REQUIRE(component.value().b == std::format("Hello {}", i));
@@ -180,12 +178,115 @@ TEST_CASE("retrieve simple component", "[component_system]") {
         auto [success, new_component_array] =
                 core::add_component(ent, MockComponent{1, "Hello There"}, std::move(component_array));
         REQUIRE(success == sts::error::ok);
-        auto const component = core::get_component(1, new_component_array);
+        auto component = core::get_component(1, new_component_array);
         REQUIRE(!component.has_value());
     }
 
     SECTION("Retrieve from empty array") {
-        auto const component = core::get_component(1, component_array);
+        auto component = core::get_component(1, component_array);
         REQUIRE(!component.has_value());
+    }
+}
+
+TEST_CASE("Add entity to system", "[system]") {
+    class TestSystem : public core::System {
+    public:
+        void Update() {}
+    };
+
+    TestSystem test_system;
+
+    SECTION("Add simple entity") {
+        auto const [success, new_system] = core::add_to_system(0, std::move(test_system));
+        REQUIRE(success == sts::error::ok);
+        REQUIRE(new_system.entities.size() == 1);
+    }
+
+    SECTION("Add multiple entities to system") {
+        std::array<core::Entity, 5> entities = {0, 1, 2, 3, 4};
+
+        for (auto const entity: entities) {
+            auto [success, new_system] = core::add_to_system(entity, std::move(test_system));
+            REQUIRE(success == sts::error::ok);
+            test_system = std::move(new_system);
+        }
+
+        REQUIRE(test_system.entities.size() == entities.size());
+    }
+
+    SECTION("Entitiy already added to the system") {
+        auto [success, new_system] = core::add_to_system(0, std::move(test_system));
+        REQUIRE(success == sts::error::ok);
+        REQUIRE(new_system.entities.size() == 1);
+        auto [success2, new_system2] = core::add_to_system(0, std::move(new_system));
+        REQUIRE(success2 == sts::error::entity_exists);
+        REQUIRE(new_system2.entities.size() == 1);
+    }
+}
+
+TEST_CASE("Remove entities from the systen", "[system]") {
+    class TestSystem : public core::System {
+    public:
+        void Update() {}
+    };
+
+    TestSystem test_system;
+
+    SECTION("Remove entity") {
+        auto [success, new_system] = core::add_to_system(0, std::move(test_system));
+        REQUIRE(success == sts::error::ok);
+        REQUIRE(new_system.entities.size() == 1);
+
+        auto [success2, new_system2] = core::remove_from_system(0, std::move(new_system));
+        REQUIRE(success2 == sts::error::ok);
+        REQUIRE(new_system2.entities.empty());
+    }
+
+    SECTION("Remove not existing entity from the system") {
+        auto [success2, new_system2] = core::remove_from_system(0, std::move(test_system));
+        REQUIRE(success2 == sts::error::invalid_entity);
+        REQUIRE(new_system2.entities.empty());
+    }
+}
+
+TEST_CASE("Invoke System on components", "[system]") {
+    struct MockComponent {
+        int a{};
+    };
+    class TestSystem : public core::System {
+    public:
+        core::ComponentBase<MockComponent, 5> Update(core::ComponentBase<MockComponent, 5> &&mocks) {
+            for (auto const entity: entities) {
+                if (auto mock = core::get_component(entity, mocks); mock.has_value()) {
+                    auto const updated_value = mock.value().a + 1;
+                    auto [success, new_mocks] =
+                            core::update_component(entity, MockComponent{updated_value}, std::move(mocks));
+                    REQUIRE(success == sts::error::ok);
+                    mocks = std::move(new_mocks);
+                }
+            }
+            return std::move(mocks);
+        }
+    };
+
+    TestSystem test_system;
+    core::ComponentBase<MockComponent, 5> mocks;
+    for (int i = 0; i < mocks.components.size(); i++) {
+        auto [success, new_mocks] = core::add_component(i, MockComponent{i}, std::move(mocks));
+        REQUIRE(success == sts::error::ok);
+        mocks = std::move(new_mocks);
+        auto [success2, new_system] = core::add_to_system(i, std::move(test_system));
+        REQUIRE(success2 == sts::error::ok);
+        test_system = std::move(new_system);
+    }
+
+    auto update_mocks = test_system.Update(std::move(mocks));
+
+    for (int i = 0; i < mocks.components.size(); i++) {
+        if (auto mock = core::get_component(i, update_mocks); mock.has_value()) {
+            REQUIRE(mock.value().a == (i + 1));
+        } else {
+            FAIL("invalid component");
+        }
     }
 }

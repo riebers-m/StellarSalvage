@@ -150,13 +150,67 @@ namespace core {
     }
 
     template<typename T, std::size_t N>
-    std::optional<T> get_component(Entity entity, ComponentBase<T, N> const &component_array) {
+    std::pair<sts::error, ComponentBase<T,N>> update_component(Entity entity, T const &new_value, ComponentBase<T, N> &&component_array) {
+        auto const it = component_array.entity_to_index.find(entity);
+        if (it != component_array.entity_to_index.end()) {
+            component_array.components.at(it->second) = new_value;
+            return std::make_pair(sts::error::ok, std::move(component_array));
+        }
+        return std::make_pair(sts::error::invalid_entity, component_array);
+    }
+
+    /**
+     * @brief Retrieves the component associated with a specific entity from the given component array.
+     *
+     * This function attempts to find and return the component corresponding to the provided entity
+     * within the component array. If the entity exists within the array, the associated component
+     * is returned as an `std::optional<T>`. If the entity is not found, the function returns
+     * `std::nullopt`.
+     *
+     * @tparam T The type of the component stored in the component array.
+     * @tparam N The maximum number of components the component array can hold.
+     * @param entity The entity for which the component is being retrieved.
+     * @param component_array The array of components where each component is associated with an entity.
+     * @return std::optional<T> The component associated with the entity if it exists, otherwise `std::nullopt`.
+     */
+    template<typename T, std::size_t N>
+    std::optional<T> get_component(Entity entity, ComponentBase<T, N> &component_array) {
         if (auto const searched_entity = component_array.entity_to_index.find(entity);
             searched_entity != component_array.entity_to_index.end()) {
             return component_array.components.at(searched_entity->second);
         }
         return {};
     }
+
+    struct System {
+        std::unordered_set<Entity> entities{};
+    };
+
+    template<typename T_Sys>
+    std::pair<sts::error, T_Sys> add_to_system(Entity entity, T_Sys &&system) {
+        static_assert(std::is_base_of_v<System, T_Sys>, "System base class mismatch");
+
+        if (system.entities.find(entity) != system.entities.end()) {
+            return std::make_pair(sts::error::entity_exists, std::move(system));
+        }
+
+        if (auto const itr = system.entities.insert(entity); !itr.second) {
+            return std::make_pair(sts::error::failed, std::move(system));
+        }
+        return std::make_pair(sts::error::ok, std::move(system));
+    }
+
+    template<typename T_Sys>
+    std::pair<sts::error, T_Sys> remove_from_system(Entity entity, T_Sys &&system) {
+        static_assert(std::is_base_of_v<System, T_Sys>, "System base class mismatch");
+
+        if (auto itr = system.entities.find(entity); itr != system.entities.end()) {
+            system.entities.erase(itr);
+            return std::make_pair(sts::error::ok, std::move(system));
+        }
+        return std::make_pair(sts::error::invalid_entity, std::move(system));
+    }
+
 
 } // namespace core
 #endif // ENTITYCOMPONENTSYSTEM_HPP

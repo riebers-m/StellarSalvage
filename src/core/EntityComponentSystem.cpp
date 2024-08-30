@@ -3,7 +3,6 @@
 //
 
 #include "core/EntityComponentSystem.hpp"
-#include <stdexcept>
 #include "Exception.hpp"
 
 namespace core {

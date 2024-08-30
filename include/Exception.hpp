@@ -41,6 +41,7 @@ namespace sts {
 
     enum class error {
         ok,
+        failed,
         entity_limit,
         invalid_entity,
         entity_exists,
