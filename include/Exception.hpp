@@ -45,6 +45,8 @@ namespace sts {
         entity_limit,
         invalid_entity,
         entity_exists,
+        invalid_component,
+        component_exists,
     };
 
 } // namespace sts

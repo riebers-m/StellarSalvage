@@ -54,6 +54,8 @@ add_executable(${PROJECT_NAME} main.cpp
         core/Collision.cpp
         ${CMAKE_SOURCE_DIR}/include/core/EntityComponentSystem.hpp
         core/EntityComponentSystem.cpp
+        ${CMAKE_SOURCE_DIR}/include/core/EnteiComponentSystem.hpp
+        core/EnteiComponentSystem.cpp
 )
 target_link_libraries(${PROJECT_NAME} spdlog::spdlog sts_engine)
 target_include_directories(${PROJECT_NAME} PRIVATE

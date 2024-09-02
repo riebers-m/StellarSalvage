@@ -15,7 +15,7 @@ TEST_CASE("create_entity creates a new entity and updates the Entities struct co
         REQUIRE(entity == 0); // First entity should have ID 0
         REQUIRE(updated_entities.living_entities.size() == 1);
         REQUIRE(updated_entities.living_entities.count(entity) == 1);
-        REQUIRE(updated_entities.totoal_entity_count == 1);
+        REQUIRE(updated_entities.total_entity_count == 1);
     }
 
     SECTION("Creating a second entity") {
@@ -24,7 +24,7 @@ TEST_CASE("create_entity creates a new entity and updates the Entities struct co
         REQUIRE(entity2 == 1); // Second entity should have ID 1
         REQUIRE(updated_entities2.living_entities.size() == 2);
         REQUIRE(updated_entities2.living_entities.count(entity2) == 1);
-        REQUIRE(updated_entities2.totoal_entity_count == 2);
+        REQUIRE(updated_entities2.total_entity_count == 2);
     }
 
     SECTION("Reusing an available entity") {
@@ -121,6 +121,43 @@ TEST_CASE("delete_component removes an existing entity and maintains component a
         auto [result, updated_component_array] = delete_component(non_existent_entity, std::move(component_array));
         REQUIRE(result == sts::error::invalid_entity);
         REQUIRE(updated_component_array.entity_count == 5); // No change in entity count
+    }
+}
+
+TEST_CASE("retrieve component reference change value and maintains component array integrity", "[component_system]") {
+    struct MockComponent {
+        int a{};
+        int b{};
+    };
+
+    core::ComponentBase<MockComponent, 5> component_array;
+
+    for (int i = 0; i < 5; i++) {
+        auto [success, new_component_array] = core::add_component(i, MockComponent{i, i}, std::move(component_array));
+        component_array = std::move(new_component_array);
+    }
+
+    SECTION("Retrieve component reference and change value") {
+        // change values
+        for (int i = 0; i < 5; i++) {
+            try {
+                auto &component = core::get_component_reference(i, component_array);
+                component.a += 1;
+                component.b += 2;
+
+            } catch (sts::CoreError const &e) {
+                FAIL(e.what());
+            }
+        }
+        // check values changed respectively
+        for (int i = 0; i < 5; i++) {
+            if (auto component = core::get_component(i, component_array); component.has_value()) {
+                REQUIRE(component.value().a == (i + 1));
+                REQUIRE(component.value().b == (i + 2));
+            } else {
+                FAIL(std::format("entity component {} has no value", i));
+            }
+        }
     }
 }
 

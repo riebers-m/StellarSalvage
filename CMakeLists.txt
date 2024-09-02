@@ -16,6 +16,7 @@ option(BUILD_TESTS "Build all tests" ON)
 # Option for selecting the backend
 option(USE_SDL2 "Use SDL2 as the rendering backend" OFF)
 option(USE_SFML "Use SFML as the rendering backend" ON)
+option(BUILD_EXAMPLES "Build all examples" ON)
 
 
 if (UNIX)
@@ -52,4 +53,8 @@ if (BUILD_TESTS)
     CPMAddPackage("gh:catchorg/Catch2@3.6.0")
     enable_testing()
     add_subdirectory(test)
+endif ()
+
+if(BUILD_EXAMPLES)
+    add_subdirectory(examples)
 endif ()

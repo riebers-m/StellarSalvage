@@ -3,7 +3,6 @@
 //
 
 #include <format>
-#include <iostream>
 #include <spdlog/spdlog.h>
 #include "Engine.hpp"
 #include "Exception.hpp"

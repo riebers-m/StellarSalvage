@@ -6,6 +6,8 @@
 #define STELLAR_SALVAGE_RENDERER_HPP
 #include <cstdint>
 #include <cstddef>
+#include <optional>
+
 namespace sts {
     enum class Color
     {
@@ -38,8 +40,18 @@ namespace sts {
         WHITE,
         GRAY,
         AQUA,
-        VIOLET
+        VIOLET,
+        COUNT
     };
+
+    inline std::optional<Color> int_to_color(int value)
+    {
+        if (value >= 0 && value < static_cast<int>(Color::COUNT))
+        {
+            return static_cast<Color>(value);
+        }
+        return std::nullopt;
+    }
 
     struct Rect {
         int32_t width{0};

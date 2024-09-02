@@ -12,7 +12,7 @@ namespace core {
             new_entity = entities.available_entities.front();
             entities.available_entities.pop();
         } else {
-            new_entity = entities.totoal_entity_count++;
+            new_entity = entities.total_entity_count++;
         }
         entities.living_entities.insert(new_entity);
         return std::make_pair(new_entity, std::move(entities));

@@ -18,7 +18,7 @@ namespace core {
     struct Entities {
         std::queue<Entity> available_entities{};
         std::unordered_set<Entity> living_entities{};
-        std::size_t totoal_entity_count{};
+        std::size_t total_entity_count{};
     };
 
     /**
@@ -150,7 +150,8 @@ namespace core {
     }
 
     template<typename T, std::size_t N>
-    std::pair<sts::error, ComponentBase<T,N>> update_component(Entity entity, T const &new_value, ComponentBase<T, N> &&component_array) {
+    std::pair<sts::error, ComponentBase<T, N>> update_component(Entity entity, T const &new_value,
+                                                                ComponentBase<T, N> &&component_array) {
         auto const it = component_array.entity_to_index.find(entity);
         if (it != component_array.entity_to_index.end()) {
             component_array.components.at(it->second) = new_value;
@@ -174,21 +175,29 @@ namespace core {
      * @return std::optional<T> The component associated with the entity if it exists, otherwise `std::nullopt`.
      */
     template<typename T, std::size_t N>
-    std::optional<T> get_component(Entity entity, ComponentBase<T, N> &component_array) {
-        if (auto const searched_entity = component_array.entity_to_index.find(entity);
-            searched_entity != component_array.entity_to_index.end()) {
-            return component_array.components.at(searched_entity->second);
+    std::optional<T> get_component(Entity entity, ComponentBase<T, N> const &component_array) {
+        if (component_array.entity_to_index.contains(entity)) {
+            return component_array.components.at(component_array.entity_to_index.at(entity));
         }
         return {};
+    }
+
+    /* Maybe use this for easier interaction */
+    template<typename T, std::size_t N>
+    T &get_component_reference(Entity entity, ComponentBase<T, N> &component_array) {
+        if (component_array.entity_to_index.contains(entity)) {
+            return component_array.components.at(component_array.entity_to_index.at(entity));
+        }
+        throw sts::CoreError(std::format("invalid entity {} for component type {}", entity, typeid(T).name()));
     }
 
     struct System {
         std::unordered_set<Entity> entities{};
     };
 
-    template<typename T_Sys>
-    std::pair<sts::error, T_Sys> add_to_system(Entity entity, T_Sys &&system) {
-        static_assert(std::is_base_of_v<System, T_Sys>, "System base class mismatch");
+    template<typename Sys>
+    std::pair<sts::error, Sys> add_to_system(Entity entity, Sys &&system) {
+        static_assert(std::is_base_of_v<System, Sys>, "System base class mismatch");
 
         if (system.entities.find(entity) != system.entities.end()) {
             return std::make_pair(sts::error::entity_exists, std::move(system));

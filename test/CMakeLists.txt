@@ -27,3 +27,13 @@ add_executable(TestEntityComponentSystem
 target_include_directories(TestEntityComponentSystem PRIVATE ${CMAKE_SOURCE_DIR}/include)
 target_link_libraries(TestEntityComponentSystem PRIVATE Catch2::Catch2WithMain)
 add_test(NAME TestEntityComponentSystemTest COMMAND TestEntityComponentSystem)
+
+
+add_executable(TestEnteiComponentSystem
+        core/TestEnteiComponentSystem.cpp
+        ${CMAKE_SOURCE_DIR}/src/core/Vector2D.cpp
+        ${CMAKE_SOURCE_DIR}/src/core/EnteiComponentSystem.cpp
+)
+target_include_directories(TestEnteiComponentSystem PRIVATE ${CMAKE_SOURCE_DIR}/include)
+target_link_libraries(TestEnteiComponentSystem PRIVATE Catch2::Catch2WithMain)
+add_test(NAME TestEnteiComponentSystemTest COMMAND TestEnteiComponentSystem)
